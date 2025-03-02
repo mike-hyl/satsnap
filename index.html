@@ -12,7 +12,7 @@
   <!-- Header with Title & Tagline -->
   <header>
     <h1>SnapSat</h1>
-    <div class="tagline">the easiest way to have a look</div>
+    <div class="tagline">The easiest way to have a look - satellite analysis instantly.</div>
   </header>
 
   <!-- Single Chat Box Container for the user's typed text -->
@@ -26,7 +26,6 @@
   <!-- AI Bubble (icon + text) -->
   <div id="aiBubble" class="ai-bubble">
     <div class="ai-icon">🤖</div>
-    <!-- Explanation text goes here -->
     <div id="explanation" class="ai-text"></div>
   </div>
 
@@ -44,7 +43,7 @@
         explanation: "I accessed Sentinel-2 data and applied a vegetation index. The photosynthetic activity is lower than expected. Should I inspect for an anomaly?"
       },
       {
-        userText: "Yes, show me the trend and detect anomalies",
+        userText: "Show me trends and detect anomalies.",
         imageSrc: "ndvi.jpg",
         explanation: "There is a significant departure from previous seasonal trends. It appears that bare soil is exposed, indicating a harvest or crop rotation."
       }
@@ -56,9 +55,10 @@
     const aiBubbleEl = document.getElementById("aiBubble");
     const explanationEl = document.getElementById("explanation");
 
-    // Settings
-    const typingSpeed = 50;          // ms per character
-    const pauseBetweenScenes = 3000; // ms to wait after finishing a scene
+    // Slower speeds & loop
+    const typingSpeed = 100;           // ms per character (slower typing)
+    const pauseBetweenScenes = 5000;   // ms to wait after finishing a scene (longer pause)
+    const fadeDuration = 3000;         // ms for fade in/out animations
     let currentScene = 0;
 
     // Type text character by character
@@ -78,7 +78,7 @@
     }
 
     // Fade out image and AI bubble
-    function fadeOutImageAndBubble(fadeDuration = 1500) {
+    function fadeOutImageAndBubble() {
       chatImageEl.classList.remove("visible");
       chatImageEl.classList.add("fadingOut");
       aiBubbleEl.classList.remove("visible");
@@ -94,9 +94,14 @@
       });
     }
 
-    // Show each scene in sequence
+    // Show each scene in sequence, then loop
     function showScene(sceneIndex) {
-      if (sceneIndex >= scenes.length) return;
+      // If we reach beyond the last scene, go back to scene 0 (loop)
+      if (sceneIndex >= scenes.length) {
+        currentScene = 0;
+        showScene(currentScene);
+        return;
+      }
 
       const { userText, imageSrc, explanation } = scenes[sceneIndex];
 
@@ -107,11 +112,11 @@
           chatImageEl.src = imageSrc;
           chatImageEl.classList.add("visible");
 
-          // Update the AI explanation text
+          // Update AI explanation text
           explanationEl.textContent = explanation;
           aiBubbleEl.classList.add("visible");
 
-          // Move to the next scene
+          // After a pause, go to the next scene
           setTimeout(() => {
             currentScene++;
             showScene(currentScene);
