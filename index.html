@@ -21,10 +21,10 @@
   </div>
 
   <!-- Single Image & Explanation for All Scenes -->
+  <!-- If your images are in a subfolder, e.g. "images/", use imageSrc: "images/satellite.jpg" below. -->
   <img id="chatImage" src="" alt="Chat Image" />
   <div id="explanation"></div>
 
-  <!-- Add your JavaScript here -->
   <script>
     // Scenes data
     const scenes = [
@@ -40,7 +40,7 @@
       },
       {
         userText: "Yes, show me the trend and detect anomalies",
-        imageSrc: "trend.jpg",
+        imageSrc: "ndvi.jpg",
         explanation: "There is a significant departure from previous seasonal trends. It appears that bare soil is exposed, indicating a harvest or crop rotation."
       }
     ];
@@ -79,6 +79,7 @@
 
       return new Promise((resolve) => {
         setTimeout(() => {
+          // Reset states after fade
           chatImageEl.classList.remove("fadingOut");
           explanationEl.classList.remove("fadingOut");
           resolve();
@@ -115,6 +116,5 @@
     // Start from scene 0
     showScene(currentScene);
   </script>
-
 </body>
 </html>
