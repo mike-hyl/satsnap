@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SnapSat</title>
+
+  <!-- Google Fonts: Montserrat (thin & blocky) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:300,400&display=swap" />
+
   <!-- Link your external CSS file -->
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -12,7 +16,7 @@
   <!-- Header with Title & Tagline -->
   <header>
     <h1>SnapSat</h1>
-    <div class="tagline">The easiest way to have a look - satellite analysis instantly.</div>
+    <div class="tagline">the easiest way to have a look</div>
   </header>
 
   <!-- Single Chat Box Container for the user's typed text -->
@@ -43,7 +47,7 @@
         explanation: "I accessed Sentinel-2 data and applied a vegetation index. The photosynthetic activity is lower than expected. Should I inspect for an anomaly?"
       },
       {
-        userText: "Show me trends and detect anomalies.",
+        userText: "Yes, show me the trend and detect anomalies",
         imageSrc: "ndvi.jpg",
         explanation: "There is a significant departure from previous seasonal trends. It appears that bare soil is exposed, indicating a harvest or crop rotation."
       }
@@ -57,7 +61,7 @@
 
     // Slower speeds & loop
     const typingSpeed = 100;           // ms per character (slower typing)
-    const pauseBetweenScenes = 5000;   // ms to wait after finishing a scene (longer pause)
+    const pauseBetweenScenes = 5000;   // ms to wait after finishing a scene
     const fadeDuration = 3000;         // ms for fade in/out animations
     let currentScene = 0;
 
@@ -79,6 +83,7 @@
 
     // Fade out image and AI bubble
     function fadeOutImageAndBubble() {
+      // Hide old image & explanation
       chatImageEl.classList.remove("visible");
       chatImageEl.classList.add("fadingOut");
       aiBubbleEl.classList.remove("visible");
@@ -86,7 +91,7 @@
 
       return new Promise((resolve) => {
         setTimeout(() => {
-          // Reset classes after fade
+          // After fadeDuration, reset their classes
           chatImageEl.classList.remove("fadingOut");
           aiBubbleEl.classList.remove("fadingOut");
           resolve();
@@ -96,7 +101,7 @@
 
     // Show each scene in sequence, then loop
     function showScene(sceneIndex) {
-      // If we reach beyond the last scene, go back to scene 0 (loop)
+      // If we reach beyond the last scene, loop back to the first
       if (sceneIndex >= scenes.length) {
         currentScene = 0;
         showScene(currentScene);
@@ -105,6 +110,7 @@
 
       const { userText, imageSrc, explanation } = scenes[sceneIndex];
 
+      // Fade out old content first
       fadeOutImageAndBubble().then(() => {
         // Type the user text
         typeText(typingEl, userText, typingSpeed, () => {
@@ -112,11 +118,11 @@
           chatImageEl.src = imageSrc;
           chatImageEl.classList.add("visible");
 
-          // Update AI explanation text
+          // Display the AI explanation & bubble
           explanationEl.textContent = explanation;
           aiBubbleEl.classList.add("visible");
 
-          // After a pause, go to the next scene
+          // Wait, then move to the next scene
           setTimeout(() => {
             currentScene++;
             showScene(currentScene);
