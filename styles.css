@@ -6,7 +6,8 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  /* Use Montserrat from the Google Fonts link in <head> */
+  font-family: 'Montserrat', sans-serif;
   background-color: #f9f9f9;
   color: #333;
   display: flex;
@@ -15,28 +16,29 @@ body {
   min-height: 100vh;
 }
 
-/* Header with gradient banner */
+/* Header with a banner image (banner.jpg) */
 header {
   width: 100%;
-  background: linear-gradient(to right, #222, #555);
+  background: url('banner.jpg') center/cover no-repeat;
   text-align: center;
-  padding: 40px 20px;
+  padding: 60px 20px;
   margin-bottom: 30px;
 }
 
-/* Futuristic block font for SnapSat */
+/* Thin, blocky style for SnapSat title */
 header h1 {
-  font-family: 'Impact', 'Arial Black', sans-serif;
-  letter-spacing: 2px;
+  font-weight: 300;   /* Thin weight */
   font-size: 3rem;
   color: #fff;
-  text-transform: uppercase;
+  letter-spacing: 1px;
   margin-bottom: 10px;
 }
 
+/* Tagline beneath the title */
 header .tagline {
+  font-weight: 400;
   font-size: 1.3rem;
-  color: #ddd;
+  color: #eee;
 }
 
 /* Chat Container (User message) */
@@ -48,7 +50,7 @@ header .tagline {
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   position: relative;
-  min-height: 60px; /* For visual stability */
+  min-height: 60px;
   margin-bottom: 10px;
 }
 
@@ -66,18 +68,18 @@ header .tagline {
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-top: 10px;
-  transition: opacity 1.5s ease;
-  opacity: 0;    /* Hidden initially */
+  transition: opacity 3s ease;  /* Slower fade transition */
+  opacity: 0;    
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
 
 #chatImage.visible {
-  opacity: 1;    /* Fade in */
+  opacity: 1;    
 }
 #chatImage.fadingOut {
-  opacity: 0;    /* Fade out */
+  opacity: 0;    
 }
 
 /* AI bubble with icon + text */
@@ -90,27 +92,27 @@ header .tagline {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   margin: 20px auto 0;
   display: flex;
-  align-items: center; /* Center icon + text vertically */
-  justify-content: center; /* Center them horizontally as well */
-  transition: opacity 1.5s ease;
-  opacity: 0;           /* Hidden initially */
+  align-items: center;
+  justify-content: center;
+  transition: opacity 3s ease; /* Slower fade transition */
+  opacity: 0;           
 }
 .ai-bubble.visible {
-  opacity: 1;           /* Fade in */
+  opacity: 1;           
 }
 .ai-bubble.fadingOut {
-  opacity: 0;           /* Fade out */
+  opacity: 0;           
 }
 
 /* AI Icon */
 .ai-icon {
   font-size: 2rem;
-  margin-right: 10px; /* space between icon and text */
+  margin-right: 10px;
 }
 
 /* AI Text (dark blue, centered) */
 .ai-text {
-  color: #003366;       /* Dark blue */
-  text-align: center;   /* Center alignment */
-  font-style: italic;   /* Italic style if desired */
+  color: #003366;
+  text-align: center;
+  font-style: italic;
 }
