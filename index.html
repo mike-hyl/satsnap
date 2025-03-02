@@ -19,6 +19,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
     }
 
     /* Header Style */
@@ -39,45 +40,47 @@
       color: #555;
     }
 
-    /* Container for Each "Chat" Step */
-    .chat-step {
+    /* Chat Container */
+    #chat-container {
       width: 80%;
       max-width: 600px;
       background-color: #fff;
       border-radius: 5px;
       padding: 20px;
-      margin-bottom: 20px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       position: relative;
+      min-height: 60px; /* for visual stability */
     }
 
     /* Typing text */
-    .typing {
+    #typing {
       font-size: 1.1rem;
       line-height: 1.4;
-      min-height: 50px; /* Ensures space while typing */
       white-space: pre-wrap;
     }
 
-    /* Images */
-    .sat-image {
+    /* Chat Image */
+    #chatImage {
       width: 80%;
       max-width: 600px;
       border: 1px solid #ccc;
       border-radius: 5px;
       margin-top: 20px;
-      opacity: 0;              /* hidden initially */
       transition: opacity 1.5s ease;
+      opacity: 0;            /* hidden initially */
       display: block;
       margin-left: auto;
       margin-right: auto;
     }
-    .sat-image.visible {
-      opacity: 1;             /* fade in */
+    #chatImage.visible {
+      opacity: 1;           /* fade in */
+    }
+    #chatImage.fadingOut {
+      opacity: 0;           /* fade out */
     }
 
-    /* AI Explanation */
-    .ai-explanation {
+    /* Explanation box */
+    #explanation {
       width: 80%;
       max-width: 600px;
       background-color: #fff;
@@ -85,12 +88,15 @@
       padding: 15px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       font-style: italic;
-      opacity: 0;             /* hidden initially */
-      transition: opacity 1.5s ease;
       margin: 20px auto 0;
+      transition: opacity 1.5s ease;
+      opacity: 0;           /* hidden initially */
     }
-    .ai-explanation.visible {
-      opacity: 1;             /* fade in */
+    #explanation.visible {
+      opacity: 1;           /* fade in */
+    }
+    #explanation.fadingOut {
+      opacity: 0;           /* fade out */
     }
   </style>
 </head>
@@ -102,38 +108,51 @@
     <div class="tagline">the easiest way to have a look</div>
   </header>
 
-  <!-- STEP 1: "I want to buy a house..." -->
-  <div id="step1" class="chat-step">
-    <div id="typing1" class="typing"></div>
-  </div>
-  <img id="satImage1" class="sat-image" src="satellite.jpg" alt="Satellite Image 1" />
-  <div id="aiExplanation1" class="ai-explanation">
-    The site was a forest until conversion in 2018. It currently looks like agricultural land.
+  <!-- Single Chat Box Container -->
+  <div id="chat-container">
+    <div id="typing"></div>
   </div>
 
-  <!-- STEP 2: "I am buying products..." -->
-  <!-- Appears after a 5-second delay -->
-  <div id="step2" class="chat-step" style="display: none;">
-    <div id="typing2" class="typing"></div>
-  </div>
-  <img id="satImage2" class="sat-image" src="ndvi.jpg" alt="NDVI Image 1" style="display: none;"/>
-  <div id="aiExplanation2" class="ai-explanation" style="display: none;">
-    I accessed Sentinel-2 data and applied a vegetation index. The photosynthetic activity is lower than expected. Should I inspect for an anomaly?
-  </div>
-
-  <!-- STEP 3: "Yes, show me the trend and detect anomalies" -->
-  <div id="step3" class="chat-step" style="display: none;">
-    <div id="typing3" class="typing"></div>
-  </div>
-  <img id="satImage3" class="sat-image" src="trend.jpg" alt="NDVI Image 2" style="display: none;"/>
-  <div id="aiExplanation3" class="ai-explanation" style="display: none;">
-    There is a significant departure from previous seasonal trends. It appears that bare soil is exposed, indicating a harvest or crop rotation.
-  </div>
+  <!-- Single Image & Explanation for All Scenes -->
+  <!-- Update "satellite.jpg" / "ndvi.jpg" paths if they are in a folder like "images/" -->
+  <img id="chatImage" src="" alt="Chat Image" />
+  <div id="explanation"></div>
 
   <script>
-    // Helper function to type text character by character
+    // Scenes data
+    const scenes = [
+      {
+        userText: "I want to buy a house, can you give me the site history?",
+        imageSrc: "satellite.jpg", // or "images/satellite.jpg"
+        explanation: "The site was a forest until conversion in 2018. It currently looks like agricultural land."
+      },
+      {
+        userText: "I am buying products from this farm, can you check the health?",
+        imageSrc: "ndvi.jpg", // or "images/ndvi.jpg"
+        explanation: "I accessed Sentinel-2 data and applied a vegetation index. The photosynthetic activity is lower than expected. Should I inspect for an anomaly?"
+      },
+      {
+        userText: "Yes, show me the trend and detect anomalies",
+        imageSrc: "ndvi.jpg", // same or second NDVI image
+        explanation: "There is a significant departure from previous seasonal trends. It appears that bare soil is exposed, indicating a harvest or crop rotation."
+      }
+    ];
+
+    // HTML elements
+    const typingEl = document.getElementById("typing");
+    const chatImageEl = document.getElementById("chatImage");
+    const explanationEl = document.getElementById("explanation");
+
+    // Configuration
+    const typingSpeed = 50;      // ms per character
+    const pauseBetweenScenes = 3000; // ms to wait after finishing a scene before next
+
+    let currentScene = 0;
+
+    // Type text character by character
     function typeText(element, text, speed, callback) {
       let i = 0;
+      element.textContent = ""; // Clear previous text
       function typing() {
         if (i < text.length) {
           element.textContent += text.charAt(i);
@@ -146,71 +165,54 @@
       typing();
     }
 
-    // 1) STEP 1: "I want to buy a house..."
-    const step1Text = "I want to buy a house, can you give me the site history?";
-    const typing1El = document.getElementById("typing1");
-    const satImage1 = document.getElementById("satImage1");
-    const aiExplanation1 = document.getElementById("aiExplanation1");
+    function fadeOutImageAndExplanation(fadeDuration = 1500) {
+      // Fade out image and explanation
+      chatImageEl.classList.remove("visible");
+      chatImageEl.classList.add("fadingOut");
+      explanationEl.classList.remove("visible");
+      explanationEl.classList.add("fadingOut");
 
-    // 2) STEP 2: "I am buying products..."
-    const step2Container = document.getElementById("step2");
-    const typing2El = document.getElementById("typing2");
-    const step2Text = "I am buying products from this farm, can you check the health?";
-    const satImage2 = document.getElementById("satImage2");
-    const aiExplanation2 = document.getElementById("aiExplanation2");
-
-    // 3) STEP 3: "Yes, show me the trend and detect anomalies"
-    const step3Container = document.getElementById("step3");
-    const typing3El = document.getElementById("typing3");
-    const step3Text = "Yes, show me the trend and detect anomalies";
-    const satImage3 = document.getElementById("satImage3");
-    const aiExplanation3 = document.getElementById("aiExplanation3");
-
-    // --- Step 1 Animation ---
-    typeText(typing1El, step1Text, 50, () => {
-      // Fade in Satellite Image 1
-      satImage1.classList.add("visible");
-      // Fade in AI explanation after 2 seconds
-      setTimeout(() => {
-        aiExplanation1.classList.add("visible");
-      }, 2000);
-
-      // After 5 seconds, show Step 2
-      setTimeout(() => {
-        step2Container.style.display = "block";
-        startStep2();
-      }, 5000);
-    });
-
-    // --- Step 2 Animation ---
-    function startStep2() {
-      typeText(typing2El, step2Text, 50, () => {
-        satImage2.style.display = "block";
-        satImage2.classList.add("visible");
+      // Return a promise that resolves after fadeDuration
+      return new Promise((resolve) => {
         setTimeout(() => {
-          aiExplanation2.style.display = "block";
-          aiExplanation2.classList.add("visible");
-          // Move on to step 3 after 2 seconds
+          // Reset them to be ready for next scene
+          chatImageEl.classList.remove("fadingOut");
+          explanationEl.classList.remove("fadingOut");
+          // Hide them fully for now
+          chatImageEl.style.opacity = 0;
+          explanationEl.style.opacity = 0;
+          resolve();
+        }, fadeDuration);
+      });
+    }
+
+    function showScene(sceneIndex) {
+      if (sceneIndex >= scenes.length) {
+        return; // No more scenes
+      }
+      const { userText, imageSrc, explanation } = scenes[sceneIndex];
+
+      // 1) Fade out old image & explanation
+      fadeOutImageAndExplanation().then(() => {
+        // 2) Type the new user text
+        typeText(typingEl, userText, typingSpeed, () => {
+          // 3) After typing is done, fade in the new image and explanation
+          chatImageEl.src = imageSrc;
+          chatImageEl.classList.add("visible");
+          explanationEl.textContent = explanation;
+          explanationEl.classList.add("visible");
+
+          // 4) Wait some time, then move to the next scene
           setTimeout(() => {
-            step3Container.style.display = "block";
-            startStep3();
-          }, 2000);
-        }, 2000);
+            currentScene++;
+            showScene(currentScene);
+          }, pauseBetweenScenes);
+        });
       });
     }
 
-    // --- Step 3 Animation ---
-    function startStep3() {
-      typeText(typing3El, step3Text, 50, () => {
-        satImage3.style.display = "block";
-        satImage3.classList.add("visible");
-        setTimeout(() => {
-          aiExplanation3.style.display = "block";
-          aiExplanation3.classList.add("visible");
-        }, 2000);
-      });
-    }
-
+    // Start from scene 0
+    showScene(currentScene);
   </script>
 </body>
 </html>
