@@ -6,7 +6,6 @@
 }
 
 body {
-  /* Use Montserrat from the Google Fonts link in <head> */
   font-family: 'Montserrat', sans-serif;
   background-color: #f9f9f9;
   color: #333;
@@ -16,16 +15,7 @@ body {
   min-height: 100vh;
 }
 
-header {
-  width: 100%;
-  background: url('banner.png') center/cover no-repeat;
-  text-align: center;
-  padding: 60px 20px;
-  margin-bottom: 30px;
-}
-
-
-/* Header with a banner image (banner.jpg) */
+/* Header with banner.png as background */
 header {
   width: 100%;
   background: url('banner.png') center/cover no-repeat;
@@ -36,7 +26,7 @@ header {
 
 /* Thin, blocky style for SnapSat title */
 header h1 {
-  font-weight: 300;   /* Thin weight */
+  font-weight: 300; /* Thin font weight */
   font-size: 3rem;
   color: #fff;
   letter-spacing: 1px;
@@ -77,18 +67,18 @@ header .tagline {
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-top: 10px;
-  transition: opacity 3s ease;  /* Slower fade transition */
-  opacity: 0;    
+  transition: opacity 3s ease;
+  opacity: 0;
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
 
 #chatImage.visible {
-  opacity: 1;    
+  opacity: 1;
 }
 #chatImage.fadingOut {
-  opacity: 0;    
+  opacity: 0;
 }
 
 /* AI bubble with icon + text */
@@ -103,14 +93,15 @@ header .tagline {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 3s ease; /* Slower fade transition */
-  opacity: 0;           
+  transition: opacity 3s ease;
+  opacity: 0;
 }
+
 .ai-bubble.visible {
-  opacity: 1;           
+  opacity: 1;
 }
 .ai-bubble.fadingOut {
-  opacity: 0;           
+  opacity: 0;
 }
 
 /* AI Icon */
