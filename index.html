@@ -4,108 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SnapSat</title>
-  <style>
-    /* Basic Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    /* Header Style */
-    header {
-      width: 100%;
-      background-color: #fff;
-      text-align: center;
-      padding: 40px 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-    header .tagline {
-      font-size: 1.3rem;
-      color: #555;
-    }
-
-    /* Chat Container */
-    #chat-container {
-      width: 80%;
-      max-width: 600px;
-      background-color: #fff;
-      border-radius: 5px;
-      padding: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: relative;
-      min-height: 60px; /* for visual stability */
-    }
-
-    /* Typing text */
-    #typing {
-      font-size: 1.1rem;
-      line-height: 1.4;
-      white-space: pre-wrap;
-    }
-
-    /* Chat Image */
-    #chatImage {
-      width: 80%;
-      max-width: 600px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      margin-top: 20px;
-      transition: opacity 1.5s ease;
-      opacity: 0;            /* hidden initially */
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    #chatImage.visible {
-      opacity: 1;           /* fade in */
-    }
-    #chatImage.fadingOut {
-      opacity: 0;           /* fade out */
-    }
-
-    /* Explanation box */
-    #explanation {
-      width: 80%;
-      max-width: 600px;
-      background-color: #fff;
-      border-radius: 5px;
-      padding: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      font-style: italic;
-      margin: 20px auto 0;
-      transition: opacity 1.5s ease;
-      opacity: 0;           /* hidden initially */
-    }
-    #explanation.visible {
-      opacity: 1;           /* fade in */
-    }
-    #explanation.fadingOut {
-      opacity: 0;           /* fade out */
-    }
-  </style>
+  <!-- Link the external stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
   <!-- Header with Title & Tagline -->
   <header>
     <h1>SnapSat</h1>
-    <div class="tagline">The easiest way to take a look</div>
+    <div class="tagline">the easiest way to have a look</div>
   </header>
 
   <!-- Single Chat Box Container -->
@@ -114,45 +21,43 @@
   </div>
 
   <!-- Single Image & Explanation for All Scenes -->
-  <!-- Update "satellite.jpg" / "ndvi.jpg" paths if they are in a folder like "images/" -->
   <img id="chatImage" src="" alt="Chat Image" />
   <div id="explanation"></div>
 
+  <!-- Add your JavaScript here -->
   <script>
     // Scenes data
     const scenes = [
       {
         userText: "I want to buy a house, can you give me the site history?",
-        imageSrc: "satellite.jpg", // or "images/satellite.jpg"
+        imageSrc: "satellite.jpg",
         explanation: "The site was a forest until conversion in 2018. It currently looks like agricultural land."
       },
       {
         userText: "I am buying products from this farm, can you check the health?",
-        imageSrc: "ndvi.jpg", // or "images/ndvi.jpg"
+        imageSrc: "ndvi.jpg",
         explanation: "I accessed Sentinel-2 data and applied a vegetation index. The photosynthetic activity is lower than expected. Should I inspect for an anomaly?"
       },
       {
         userText: "Yes, show me the trend and detect anomalies",
-        imageSrc: "ndvi.jpg", // same or second NDVI image
+        imageSrc: "trend.jpg",
         explanation: "There is a significant departure from previous seasonal trends. It appears that bare soil is exposed, indicating a harvest or crop rotation."
       }
     ];
 
-    // HTML elements
     const typingEl = document.getElementById("typing");
     const chatImageEl = document.getElementById("chatImage");
     const explanationEl = document.getElementById("explanation");
 
-    // Configuration
-    const typingSpeed = 50;      // ms per character
-    const pauseBetweenScenes = 3000; // ms to wait after finishing a scene before next
+    const typingSpeed = 50;          // ms per character
+    const pauseBetweenScenes = 3000; // ms to wait after finishing a scene
 
     let currentScene = 0;
 
     // Type text character by character
     function typeText(element, text, speed, callback) {
       let i = 0;
-      element.textContent = ""; // Clear previous text
+      element.textContent = "";
       function typing() {
         if (i < text.length) {
           element.textContent += text.charAt(i);
@@ -165,31 +70,26 @@
       typing();
     }
 
+    // Fade out image and explanation
     function fadeOutImageAndExplanation(fadeDuration = 1500) {
-      // Fade out image and explanation
       chatImageEl.classList.remove("visible");
       chatImageEl.classList.add("fadingOut");
       explanationEl.classList.remove("visible");
       explanationEl.classList.add("fadingOut");
 
-      // Return a promise that resolves after fadeDuration
       return new Promise((resolve) => {
         setTimeout(() => {
-          // Reset them to be ready for next scene
           chatImageEl.classList.remove("fadingOut");
           explanationEl.classList.remove("fadingOut");
-          // Hide them fully for now
-          chatImageEl.style.opacity = 0;
-          explanationEl.style.opacity = 0;
           resolve();
         }, fadeDuration);
       });
     }
 
+    // Show each scene in sequence
     function showScene(sceneIndex) {
-      if (sceneIndex >= scenes.length) {
-        return; // No more scenes
-      }
+      if (sceneIndex >= scenes.length) return;
+
       const { userText, imageSrc, explanation } = scenes[sceneIndex];
 
       // 1) Fade out old image & explanation
@@ -199,10 +99,11 @@
           // 3) After typing is done, fade in the new image and explanation
           chatImageEl.src = imageSrc;
           chatImageEl.classList.add("visible");
+
           explanationEl.textContent = explanation;
           explanationEl.classList.add("visible");
 
-          // 4) Wait some time, then move to the next scene
+          // 4) Wait, then move to the next scene
           setTimeout(() => {
             currentScene++;
             showScene(currentScene);
@@ -214,5 +115,6 @@
     // Start from scene 0
     showScene(currentScene);
   </script>
+
 </body>
 </html>
