@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SnapSat</title>
+  <title>SatSnap</title>
 
   <!-- Google Fonts: Montserrat (thin & blocky) -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:300,400&display=swap" />
 
-  <!-- Link your external CSS file -->
+  <!-- Link to the external CSS file -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -16,7 +16,7 @@
   <!-- Header with Title & Tagline -->
   <header>
     <h1>SnapSat</h1>
-    <div class="tagline">The easiest way to take a look -- satellite analysis on demand. </div>
+    <div class="tagline">The easiest way to take a look -- satellite analysis on demand.</div>
   </header>
 
   <!-- Single Chat Box Container for the user's typed text -->
@@ -54,15 +54,15 @@
     ];
 
     // DOM elements
-    const typingEl = document.getElementById("typing");
-    const chatImageEl = document.getElementById("chatImage");
-    const aiBubbleEl = document.getElementById("aiBubble");
+    const typingEl      = document.getElementById("typing");
+    const chatImageEl   = document.getElementById("chatImage");
+    const aiBubbleEl    = document.getElementById("aiBubble");
     const explanationEl = document.getElementById("explanation");
 
-    // Slower speeds & loop
-    const typingSpeed = 100;           // ms per character (slower typing)
-    const pauseBetweenScenes = 5000;   // ms to wait after finishing a scene
-    const fadeDuration = 3000;         // ms for fade in/out animations
+    // Timings
+    const typingSpeed        = 100;   // ms per character
+    const pauseBetweenScenes = 5000;  // ms to wait after finishing a scene
+    const fadeDuration       = 3000;  // ms for fade in/out animations
     let currentScene = 0;
 
     // Type text character by character
