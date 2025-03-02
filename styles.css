@@ -15,22 +15,21 @@ body {
   min-height: 100vh;
 }
 
-/* Header Style with Gradient Banner */
+/* Header with gradient banner */
 header {
   width: 100%;
-  /* Futuristic gradient banner across the top */
   background: linear-gradient(to right, #222, #555);
   text-align: center;
   padding: 40px 20px;
   margin-bottom: 30px;
 }
 
-/* Fancy / Futuristic block font for the main title */
+/* Futuristic block font for SnapSat */
 header h1 {
   font-family: 'Impact', 'Arial Black', sans-serif;
   letter-spacing: 2px;
   font-size: 3rem;
-  color: #fff; /* Make the title stand out on the dark banner */
+  color: #fff;
   text-transform: uppercase;
   margin-bottom: 10px;
 }
@@ -40,7 +39,7 @@ header .tagline {
   color: #ddd;
 }
 
-/* Chat Container */
+/* Chat Container (User message) */
 #chat-container {
   width: 80%;
   max-width: 600px;
@@ -50,6 +49,7 @@ header .tagline {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   position: relative;
   min-height: 60px; /* For visual stability */
+  margin-bottom: 10px;
 }
 
 #typing {
@@ -58,47 +58,59 @@ header .tagline {
   white-space: pre-wrap;
 }
 
-/* Single Image used for all scenes */
+/* Image (resized & cropped) */
 #chatImage {
-  width: 400px;        /* Fixed width */
-  height: 250px;       /* Fixed height */
-  object-fit: cover;   /* Crop to fill the box while preserving aspect ratio */
+  width: 400px;
+  height: 250px;
+  object-fit: cover;
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin-top: 20px;
+  margin-top: 10px;
   transition: opacity 1.5s ease;
-  opacity: 0;          /* Hidden initially */
+  opacity: 0;    /* Hidden initially */
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
 
 #chatImage.visible {
-  opacity: 1;          /* Fade in */
+  opacity: 1;    /* Fade in */
 }
-
 #chatImage.fadingOut {
-  opacity: 0;          /* Fade out */
+  opacity: 0;    /* Fade out */
 }
 
-/* Explanation box */
-#explanation {
+/* AI bubble with icon + text */
+.ai-bubble {
   width: 80%;
   max-width: 600px;
   background-color: #fff;
   border-radius: 5px;
   padding: 15px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  font-style: italic;
   margin: 20px auto 0;
+  display: flex;
+  align-items: center; /* Center icon + text vertically */
+  justify-content: center; /* Center them horizontally as well */
   transition: opacity 1.5s ease;
   opacity: 0;           /* Hidden initially */
 }
-
-#explanation.visible {
+.ai-bubble.visible {
   opacity: 1;           /* Fade in */
 }
-
-#explanation.fadingOut {
+.ai-bubble.fadingOut {
   opacity: 0;           /* Fade out */
+}
+
+/* AI Icon */
+.ai-icon {
+  font-size: 2rem;
+  margin-right: 10px; /* space between icon and text */
+}
+
+/* AI Text (dark blue, centered) */
+.ai-text {
+  color: #003366;       /* Dark blue */
+  text-align: center;   /* Center alignment */
+  font-style: italic;   /* Italic style if desired */
 }
