@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SnapSat</title>
-  <!-- Link the external stylesheet -->
+  <!-- Link your external CSS file -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -12,18 +12,23 @@
   <!-- Header with Title & Tagline -->
   <header>
     <h1>SnapSat</h1>
-    <div class="tagline">The easiest way to take a look.</div>
+    <div class="tagline">the easiest way to have a look</div>
   </header>
 
-  <!-- Single Chat Box Container -->
+  <!-- Single Chat Box Container for the user's typed text -->
   <div id="chat-container">
     <div id="typing"></div>
   </div>
 
-  <!-- Single Image & Explanation for All Scenes -->
-  <!-- If your images are in a subfolder, e.g. "images/", use imageSrc: "images/satellite.jpg" below. -->
+  <!-- Single Image (resized & cropped via CSS) -->
   <img id="chatImage" src="" alt="Chat Image" />
-  <div id="explanation"></div>
+
+  <!-- AI Bubble (icon + text) -->
+  <div id="aiBubble" class="ai-bubble">
+    <div class="ai-icon">🤖</div>
+    <!-- Explanation text goes here -->
+    <div id="explanation" class="ai-text"></div>
+  </div>
 
   <script>
     // Scenes data
@@ -45,13 +50,15 @@
       }
     ];
 
+    // DOM elements
     const typingEl = document.getElementById("typing");
     const chatImageEl = document.getElementById("chatImage");
+    const aiBubbleEl = document.getElementById("aiBubble");
     const explanationEl = document.getElementById("explanation");
 
+    // Settings
     const typingSpeed = 50;          // ms per character
     const pauseBetweenScenes = 3000; // ms to wait after finishing a scene
-
     let currentScene = 0;
 
     // Type text character by character
@@ -70,18 +77,18 @@
       typing();
     }
 
-    // Fade out image and explanation
-    function fadeOutImageAndExplanation(fadeDuration = 1500) {
+    // Fade out image and AI bubble
+    function fadeOutImageAndBubble(fadeDuration = 1500) {
       chatImageEl.classList.remove("visible");
       chatImageEl.classList.add("fadingOut");
-      explanationEl.classList.remove("visible");
-      explanationEl.classList.add("fadingOut");
+      aiBubbleEl.classList.remove("visible");
+      aiBubbleEl.classList.add("fadingOut");
 
       return new Promise((resolve) => {
         setTimeout(() => {
-          // Reset states after fade
+          // Reset classes after fade
           chatImageEl.classList.remove("fadingOut");
-          explanationEl.classList.remove("fadingOut");
+          aiBubbleEl.classList.remove("fadingOut");
           resolve();
         }, fadeDuration);
       });
@@ -93,18 +100,18 @@
 
       const { userText, imageSrc, explanation } = scenes[sceneIndex];
 
-      // 1) Fade out old image & explanation
-      fadeOutImageAndExplanation().then(() => {
-        // 2) Type the new user text
+      fadeOutImageAndBubble().then(() => {
+        // Type the user text
         typeText(typingEl, userText, typingSpeed, () => {
-          // 3) After typing is done, fade in the new image and explanation
+          // Fade in the new image
           chatImageEl.src = imageSrc;
           chatImageEl.classList.add("visible");
 
+          // Update the AI explanation text
           explanationEl.textContent = explanation;
-          explanationEl.classList.add("visible");
+          aiBubbleEl.classList.add("visible");
 
-          // 4) Wait, then move to the next scene
+          // Move to the next scene
           setTimeout(() => {
             currentScene++;
             showScene(currentScene);
