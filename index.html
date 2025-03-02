@@ -1,52 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnapSat</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        header {
-            text-align: center;
-            padding: 70px 20px;
-            background-color: #fff;
-        }
-        h1 {
-            font-size: 3rem;
-            margin: 0;
-            letter-spacing: 1px;
-        }
-        .tagline {
-            font-size: 1.5rem;
-            color: #555;
-            margin: 10px 0 20px 0;
-        }
-        .description {
-            font-style: italic;
-            font-size: 1rem;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.5;
-            color: #666;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SnapSat Demo</title>
+  <style>
+    body {
+      margin: 0; 
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    h1 {
+      margin: 40px 0 20px;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    /* Chat Container */
+    #chat-container {
+      width: 80%;
+      max-width: 600px;
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    /* Typing indicator or typed text */
+    #typing {
+      font-size: 1.1rem;
+      line-height: 1.4;
+      min-height: 50px; /* So container doesn't collapse while typing */
+      white-space: pre-wrap; /* Preserve line breaks/spaces if any */
+      padding: 5px 0;
+    }
+
+    /* Satellite Image (hidden by default) */
+    #sat-image {
+      width: 100%;
+      max-width: 600px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-top: 20px;
+      opacity: 0;              /* Hidden initially */
+      transition: opacity 1.5s ease;
+    }
+    #sat-image.visible {
+      opacity: 1;             /* Fade in */
+    }
+
+    /* AI Explanation (hidden by default) */
+    #ai-explanation {
+      max-width: 600px;
+      margin-top: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      font-style: italic;
+      opacity: 0;             /* Hidden initially */
+      transition: opacity 1.5s ease;
+    }
+    #ai-explanation.visible {
+      opacity: 1;             /* Fade in */
+    }
+  </style>
 </head>
 <body>
 
-<header>
-    <h1>SnapSat</h1>
-    <div class="tagline">The easiest way to take a look.</div>
-    <p class="description">
-        SnapSat is an AI chat for specific workflows to generate high quality satellite images 
-        from hundreds of data sources designed for print, analysis, and publications.
-    </p>
-</header>
+  <h1>SnapSat Demo</h1>
 
+  <!-- Chat Box Simulation -->
+  <div id="chat-container">
+    <div id="typing"></div>
+  </div>
+
+  <!-- Satellite Image Placeholder -->
+  <img id="sat-image" src="satellite.jpg" alt="Satellite Image" />
+
+  <!-- AI Explanation Placeholder -->
+  <div id="ai-explanation">
+    The site was a forest until conversion in 2018. It currently looks like agricultural land.
+  </div>
+
+  <script>
+    // Text to type out
+    const text = "I want to buy a house, can you give me the site history?";
+    
+    let i = 0; // current index in the text
+    const typingSpeed = 50; // delay in ms between each character
+    const typingElement = document.getElementById("typing");
+    const satImage = document.getElementById("sat-image");
+    const aiExplanation = document.getElementById("ai-explanation");
+
+    function typeText() {
+      if (i < text.length) {
+        typingElement.textContent += text.charAt(i);
+        i++;
+        setTimeout(typeText, typingSpeed);
+      } else {
+        // Once typing is done, fade in the satellite image
+        satImage.classList.add("visible");
+
+        // Then show the AI explanation a bit later
+        setTimeout(() => {
+          aiExplanation.classList.add("visible");
+        }, 2000);
+      }
+    }
+
+    // Start typing when the page loads
+    window.onload = () => {
+      typeText();
+    };
+  </script>
 </body>
 </html>
