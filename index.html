@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SnapSat Demo</title>
+  <title>SnapSat</title>
   <style>
-    body {
-      margin: 0; 
+    /* Basic Reset */
+    * {
+      margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
       color: #333;
@@ -17,10 +22,24 @@
       justify-content: flex-start;
     }
 
-    h1 {
-      margin: 40px 0 20px;
-      font-size: 2rem;
+    /* Header Style */
+    header {
+      width: 100%;
+      background-color: #fff;
       text-align: center;
+      padding: 40px 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    header .tagline {
+      font-size: 1.3rem;
+      color: #555;
     }
 
     /* Chat Container */
@@ -30,36 +49,35 @@
       background-color: #fff;
       border-radius: 5px;
       padding: 20px;
-      margin-bottom: 20px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       position: relative;
     }
 
-    /* Typing indicator or typed text */
+    /* Typing text */
     #typing {
       font-size: 1.1rem;
       line-height: 1.4;
-      min-height: 50px; /* So container doesn't collapse while typing */
-      white-space: pre-wrap; /* Preserve line breaks/spaces if any */
-      padding: 5px 0;
+      min-height: 50px; /* Ensures space during typing */
+      white-space: pre-wrap;
     }
 
-    /* Satellite Image (hidden by default) */
+    /* Satellite Image */
     #sat-image {
-      width: 100%;
+      width: 80%;
       max-width: 600px;
       border: 1px solid #ccc;
       border-radius: 5px;
       margin-top: 20px;
-      opacity: 0;              /* Hidden initially */
+      opacity: 0;              /* hidden initially */
       transition: opacity 1.5s ease;
     }
     #sat-image.visible {
-      opacity: 1;             /* Fade in */
+      opacity: 1;             /* fade in */
     }
 
-    /* AI Explanation (hidden by default) */
+    /* AI Explanation */
     #ai-explanation {
+      width: 80%;
       max-width: 600px;
       margin-top: 20px;
       background-color: #fff;
@@ -67,37 +85,42 @@
       padding: 15px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       font-style: italic;
-      opacity: 0;             /* Hidden initially */
+      opacity: 0;             /* hidden initially */
       transition: opacity 1.5s ease;
     }
     #ai-explanation.visible {
-      opacity: 1;             /* Fade in */
+      opacity: 1;             /* fade in */
     }
   </style>
 </head>
 <body>
 
-  <h1>SnapSat Demo</h1>
+  <!-- Header with Title & Tagline -->
+  <header>
+    <h1>SnapSat</h1>
+    <div class="tagline">the easiest way to have a look</div>
+  </header>
 
-  <!-- Chat Box Simulation -->
+  <!-- Chat Animation Section -->
   <div id="chat-container">
     <div id="typing"></div>
   </div>
 
-  <!-- Satellite Image Placeholder -->
+  <!-- Satellite Image -->
+  <!-- Make sure "images/satellite.jpg" is the correct path to your image. -->
   <img id="sat-image" src="satellite.jpg" alt="Satellite Image" />
 
-  <!-- AI Explanation Placeholder -->
+  <!-- AI Explanation -->
   <div id="ai-explanation">
     The site was a forest until conversion in 2018. It currently looks like agricultural land.
   </div>
 
   <script>
-    // Text to type out
+    // The text to type out
     const text = "I want to buy a house, can you give me the site history?";
-    
     let i = 0; // current index in the text
     const typingSpeed = 50; // delay in ms between each character
+
     const typingElement = document.getElementById("typing");
     const satImage = document.getElementById("sat-image");
     const aiExplanation = document.getElementById("ai-explanation");
@@ -111,7 +134,7 @@
         // Once typing is done, fade in the satellite image
         satImage.classList.add("visible");
 
-        // Then show the AI explanation a bit later
+        // Then show the AI explanation after a delay
         setTimeout(() => {
           aiExplanation.classList.add("visible");
         }, 2000);
