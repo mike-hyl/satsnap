@@ -19,7 +19,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
     }
 
     /* Header Style */
@@ -31,38 +30,37 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       margin-bottom: 30px;
     }
-
     header h1 {
       font-size: 2.5rem;
       margin-bottom: 10px;
     }
-
     header .tagline {
       font-size: 1.3rem;
       color: #555;
     }
 
-    /* Chat Container */
-    #chat-container {
+    /* Container for Each "Chat" Step */
+    .chat-step {
       width: 80%;
       max-width: 600px;
       background-color: #fff;
       border-radius: 5px;
       padding: 20px;
+      margin-bottom: 20px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       position: relative;
     }
 
     /* Typing text */
-    #typing {
+    .typing {
       font-size: 1.1rem;
       line-height: 1.4;
-      min-height: 50px; /* Ensures space during typing */
+      min-height: 50px; /* Ensures space while typing */
       white-space: pre-wrap;
     }
 
-    /* Satellite Image */
-    #sat-image {
+    /* Images */
+    .sat-image {
       width: 80%;
       max-width: 600px;
       border: 1px solid #ccc;
@@ -70,16 +68,18 @@
       margin-top: 20px;
       opacity: 0;              /* hidden initially */
       transition: opacity 1.5s ease;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
-    #sat-image.visible {
+    .sat-image.visible {
       opacity: 1;             /* fade in */
     }
 
     /* AI Explanation */
-    #ai-explanation {
+    .ai-explanation {
       width: 80%;
       max-width: 600px;
-      margin-top: 20px;
       background-color: #fff;
       border-radius: 5px;
       padding: 15px;
@@ -87,8 +87,9 @@
       font-style: italic;
       opacity: 0;             /* hidden initially */
       transition: opacity 1.5s ease;
+      margin: 20px auto 0;
     }
-    #ai-explanation.visible {
+    .ai-explanation.visible {
       opacity: 1;             /* fade in */
     }
   </style>
@@ -101,50 +102,115 @@
     <div class="tagline">the easiest way to have a look</div>
   </header>
 
-  <!-- Chat Animation Section -->
-  <div id="chat-container">
-    <div id="typing"></div>
+  <!-- STEP 1: "I want to buy a house..." -->
+  <div id="step1" class="chat-step">
+    <div id="typing1" class="typing"></div>
   </div>
-
-  <!-- Satellite Image -->
-  <!-- Make sure "images/satellite.jpg" is the correct path to your image. -->
-  <img id="sat-image" src="satellite.jpg" alt="Satellite Image" />
-
-  <!-- AI Explanation -->
-  <div id="ai-explanation">
+  <img id="satImage1" class="sat-image" src="satellite.jpg" alt="Satellite Image 1" />
+  <div id="aiExplanation1" class="ai-explanation">
     The site was a forest until conversion in 2018. It currently looks like agricultural land.
   </div>
 
+  <!-- STEP 2: "I am buying products..." -->
+  <!-- Appears after a 5-second delay -->
+  <div id="step2" class="chat-step" style="display: none;">
+    <div id="typing2" class="typing"></div>
+  </div>
+  <img id="satImage2" class="sat-image" src="ndvi.jpg" alt="NDVI Image 1" style="display: none;"/>
+  <div id="aiExplanation2" class="ai-explanation" style="display: none;">
+    I accessed Sentinel-2 data and applied a vegetation index. The photosynthetic activity is lower than expected. Should I inspect for an anomaly?
+  </div>
+
+  <!-- STEP 3: "Yes, show me the trend and detect anomalies" -->
+  <div id="step3" class="chat-step" style="display: none;">
+    <div id="typing3" class="typing"></div>
+  </div>
+  <img id="satImage3" class="sat-image" src="trend.jpg" alt="NDVI Image 2" style="display: none;"/>
+  <div id="aiExplanation3" class="ai-explanation" style="display: none;">
+    There is a significant departure from previous seasonal trends. It appears that bare soil is exposed, indicating a harvest or crop rotation.
+  </div>
+
   <script>
-    // The text to type out
-    const text = "I want to buy a house, can you give me the site history?";
-    let i = 0; // current index in the text
-    const typingSpeed = 50; // delay in ms between each character
-
-    const typingElement = document.getElementById("typing");
-    const satImage = document.getElementById("sat-image");
-    const aiExplanation = document.getElementById("ai-explanation");
-
-    function typeText() {
-      if (i < text.length) {
-        typingElement.textContent += text.charAt(i);
-        i++;
-        setTimeout(typeText, typingSpeed);
-      } else {
-        // Once typing is done, fade in the satellite image
-        satImage.classList.add("visible");
-
-        // Then show the AI explanation after a delay
-        setTimeout(() => {
-          aiExplanation.classList.add("visible");
-        }, 2000);
+    // Helper function to type text character by character
+    function typeText(element, text, speed, callback) {
+      let i = 0;
+      function typing() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(typing, speed);
+        } else if (callback) {
+          callback();
+        }
       }
+      typing();
     }
 
-    // Start typing when the page loads
-    window.onload = () => {
-      typeText();
-    };
+    // 1) STEP 1: "I want to buy a house..."
+    const step1Text = "I want to buy a house, can you give me the site history?";
+    const typing1El = document.getElementById("typing1");
+    const satImage1 = document.getElementById("satImage1");
+    const aiExplanation1 = document.getElementById("aiExplanation1");
+
+    // 2) STEP 2: "I am buying products..."
+    const step2Container = document.getElementById("step2");
+    const typing2El = document.getElementById("typing2");
+    const step2Text = "I am buying products from this farm, can you check the health?";
+    const satImage2 = document.getElementById("satImage2");
+    const aiExplanation2 = document.getElementById("aiExplanation2");
+
+    // 3) STEP 3: "Yes, show me the trend and detect anomalies"
+    const step3Container = document.getElementById("step3");
+    const typing3El = document.getElementById("typing3");
+    const step3Text = "Yes, show me the trend and detect anomalies";
+    const satImage3 = document.getElementById("satImage3");
+    const aiExplanation3 = document.getElementById("aiExplanation3");
+
+    // --- Step 1 Animation ---
+    typeText(typing1El, step1Text, 50, () => {
+      // Fade in Satellite Image 1
+      satImage1.classList.add("visible");
+      // Fade in AI explanation after 2 seconds
+      setTimeout(() => {
+        aiExplanation1.classList.add("visible");
+      }, 2000);
+
+      // After 5 seconds, show Step 2
+      setTimeout(() => {
+        step2Container.style.display = "block";
+        startStep2();
+      }, 5000);
+    });
+
+    // --- Step 2 Animation ---
+    function startStep2() {
+      typeText(typing2El, step2Text, 50, () => {
+        satImage2.style.display = "block";
+        satImage2.classList.add("visible");
+        setTimeout(() => {
+          aiExplanation2.style.display = "block";
+          aiExplanation2.classList.add("visible");
+          // Move on to step 3 after 2 seconds
+          setTimeout(() => {
+            step3Container.style.display = "block";
+            startStep3();
+          }, 2000);
+        }, 2000);
+      });
+    }
+
+    // --- Step 3 Animation ---
+    function startStep3() {
+      typeText(typing3El, step3Text, 50, () => {
+        satImage3.style.display = "block";
+        satImage3.classList.add("visible");
+        setTimeout(() => {
+          aiExplanation3.style.display = "block";
+          aiExplanation3.classList.add("visible");
+        }, 2000);
+      });
+    }
+
   </script>
 </body>
 </html>
